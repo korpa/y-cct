@@ -37,7 +37,10 @@ type Entry struct {
 var Cmd = &cobra.Command{
 	Use:   "retention [filename]",
 	Short: "Processes entries with dates from a file or stdin",
-	Args:  cobra.MaximumNArgs(1),
+	Long: `Example:
+  * ls | y-retention -f 2006-01-02 | xargs rm -r
+`,
+	Args: cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		var reader io.Reader
 
