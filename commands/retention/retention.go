@@ -37,8 +37,26 @@ type Entry struct {
 var Cmd = &cobra.Command{
 	Use:   "retention [filename]",
 	Short: "Processes entries with dates from a file or stdin",
-	Long: `Example:
-  * ls | y-retention -f 2006-01-02 | xargs rm -r
+	Example: `# Delete old backups. Keeps one backup per day of last 4 weeks. Delete all backups
+# older than 4 weeks, but keep Monday backups and 1st of month.
+ls | y-retention -f 2006-01-02 | xargs rm -r
+
+> Filename examples
+> backup_2025-09-01.tar.gz
+> backup_2025-09-02.tar.gz
+> .
+> .
+> backup_2025-09-29.tar.gz
+> backup_2025-09-30.tar.gz
+> backup_2025-10-01.tar.gz
+> backup_2025-10-02.tar.gz
+> .
+> .
+> backup_2025-10-30.tar.gz
+> backup_2025-10-31.tar.gz
+> backup_2025-11-01.tar.gz
+> backup_2025-11-02.tar.gz
+
 `,
 	Args: cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {

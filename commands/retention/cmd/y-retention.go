@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log/slog"
 	"os"
 
+	"github.com/charmbracelet/fang"
 	"github.com/korpa/y-cct/commands/retention"
 	"github.com/korpa/y-cct/global/commands/version"
 	"github.com/korpa/y-cct/global/logging"
@@ -25,10 +27,19 @@ func main() {
 
 	slog.SetDefault(logger)
 
-	if err := retention.Cmd.Execute(); err != nil {
+	if err := fang.Execute(
+		context.Background(),
+		retention.Cmd,
+		fang.WithNotifySignal(os.Interrupt, os.Kill),
+	); err != nil {
 		slog.Error(fmt.Sprint(err))
 		os.Exit(1)
 	}
+
+	// if err := retention.Cmd.Execute(); err != nil {
+	// 	slog.Error(fmt.Sprint(err))
+	// 	os.Exit(1)
+	// }
 }
 
 func init() {
