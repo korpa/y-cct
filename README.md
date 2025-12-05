@@ -43,19 +43,19 @@ y-replacer --file text.txt --replace "^Hello:Greetings!"
 #### Replace lines starting with "But" or "Hello"
 
 ```shell
-y-replacer --file text.txt --replace "^But:HOWEVER" --replace "^Hello:GOOD DAY"`
+y-replacer --file text.txt --replace "^But:HOWEVER" --replace "^Hello:GOOD DAY"
 ```
 
 #### Append the replacement line at the end if no match is found (default behavior)
 
 ```shell
-y-replacer --file text.txt --replace "^NotFound:New line"`
+y-replacer --file text.txt --replace "^NotFound:New line"
 ```
 
 #### Do NOT append if no match is found (replace only)
 
 ```shell
-y-replacer --file text.txt --replace "^NotFound:New line" --append-missing=false`
+y-replacer --file text.txt --replace "^NotFound:New line" --append-missing=false
 ```
 
 ### Retention
