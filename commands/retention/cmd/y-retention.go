@@ -24,7 +24,6 @@ var (
 func main() {
 
 	logger := logging.GetLogger()
-
 	slog.SetDefault(logger)
 
 	if err := fang.Execute(
@@ -36,10 +35,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	// if err := retention.Cmd.Execute(); err != nil {
-	// 	slog.Error(fmt.Sprint(err))
-	// 	os.Exit(1)
-	// }
 }
 
 func init() {

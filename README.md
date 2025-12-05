@@ -12,13 +12,51 @@ go run cmd/main.go
 
 ### Specific tools only
 
-Every tool can run as own tool
+Every tool can run or build as own tool
 
 ```go
-go run commands/retention/cmd/main.go
+go run commands/retention/cmd/y-<tool name>.go
 ```
 
 ## Tools
+
+### Replacer
+
+Replacer is a CLI tool for replacing or appending lines in a file based on regular expression patterns.
+
+For each --replace argument, replacer searches for a matching line. If a match is found, the line is replaced.
+If no match is found, the replacement line can optionally be appended at the end of the file (this is the default).
+
+- Each --replace must be in the format REGEXP:LINE.
+- You can specify --replace multiple times.
+- You are responsible for adding ^ (line start) or $ (line end) anchors to your regular expressions if desired.
+- For replacements where the pattern is not found, the line is appended only if --append-missing is true (default: true).
+
+Examples:
+
+#### Replace all lines starting with "Hello" with "Greetings!"<br><br>
+
+```shell
+y-replacer --file text.txt --replace "^Hello:Greetings!"
+```
+
+#### Replace lines starting with "But" or "Hello"
+
+```shell
+y-replacer --file text.txt --replace "^But:HOWEVER" --replace "^Hello:GOOD DAY"`
+```
+
+#### Append the replacement line at the end if no match is found (default behavior)
+
+```shell
+y-replacer --file text.txt --replace "^NotFound:New line"`
+```
+
+#### Do NOT append if no match is found (replace only)
+
+```shell
+y-replacer --file text.txt --replace "^NotFound:New line" --append-missing=false`
+```
 
 ### Retention
 

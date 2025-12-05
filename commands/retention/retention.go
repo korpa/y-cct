@@ -39,7 +39,7 @@ var Cmd = &cobra.Command{
 	Short: "Processes entries with dates from a file or stdin",
 	Example: `# Delete old backups. Keeps one backup per day of last 4 weeks. Delete all backups
 # older than 4 weeks, but keep Monday backups and 1st of month.
-ls | y-retention -f 2006-01-02 | xargs rm -r
+  ls | retention -f 2006-01-02 | xargs rm -r
 
 > Filename examples
 > backup_2025-09-01.tar.gz
