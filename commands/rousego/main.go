@@ -26,7 +26,7 @@ var vipercfg *viper.Viper
 // rootCmd represents the base command when called without any subcommands
 var Cmd = &cobra.Command{
 	Use:   "rousego",
-	Short: "rousego",
+	Short: "rousego startes multiple processes in parallel",
 	Long: `rousego startes multiple processes in parallel
 
 
