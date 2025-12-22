@@ -82,3 +82,36 @@ backup_2025-11-02.tar.gz
 ```shell
 ls | y-retention -f 2006-01-02 | xargs rm -r
 ```
+
+### Rousego
+
+Startes multiple processes in parallel and unifies output of these processes. A `rousego.toml` file has to be in the directory in which rousego starts. Normally your project main directory.
+
+Example 1: rousego.toml
+
+```toml
+[[cmds]]
+label = "Backend"
+cmd = "make serve"
+
+[[cmds]]
+label = "Frontend"
+cmd = "cd frontend ; npm run dev"
+```
+
+Example 2: rousego.toml
+
+```toml
+[[cmds]]
+label = "Backend2"
+cmd = "sleep 3 ; echo 'hello from backend via stdout'; sleep 4"
+
+
+[[cmds]]
+label = "Frontend"
+cmd = "sleep 2 ; echo 'hello from frontend via stdout' ; sleep 1"
+
+[[cmds]]
+label = "Frontend2"
+cmd = "sleep 1 ; echo 'hello from frontend2 via stderr' 1>&2 ; sleep 2"
+```
