@@ -2,43 +2,53 @@ package version
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/common-nighthawk/go-figure"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+	"golang.org/x/term"
 )
 
-var (
-	Version       = "developmentVERSION"
-	Os            = "unknownOS"
-	Arch          = "unknownARCH"
-	Commit        = "unknownCOMMIT"
-	BaseName      = "y"
-	MarketingSlug = "y - Composite Command Tree"
-)
+type VersionInfo struct {
+	Version       string
+	Goos          string
+	Goarch        string
+	Commit        string
+	Date          string
+	BaseName      string
+	MarketingSlug string
+	Description   string
+}
 
 var Cmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version number",
 	Long:  `Print the version number`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if viper.GetBool("short") {
-			fmt.Println(Version + "-" + Commit + "-" + Os + "-" + Arch)
-		} else {
-			myFigure := figure.NewFigure(BaseName, "", true)
+
+		ctx := cmd.Context()
+
+		versionInfo := ctx.Value("versionInfo").(VersionInfo)
+
+		if term.IsTerminal(int(os.Stdout.Fd())) {
+
+			myFigure := figure.NewFigure(versionInfo.BaseName, "", true)
 			myFigure.Print()
+
 			fmt.Println()
-			fmt.Println(MarketingSlug)
+			fmt.Println(versionInfo.MarketingSlug)
 			fmt.Println()
-			fmt.Println(`This is a Composite Command Tree for Go Cobra`)
+			fmt.Println(versionInfo.Description)
 			fmt.Println()
-			fmt.Println(BaseName + " version " + Version + "-" + Commit + "-" + Os + "-" + Arch)
+			fmt.Println(versionInfo.BaseName + " version " + versionInfo.Version + "-" + versionInfo.Commit + " " + versionInfo.Goos + "/" + versionInfo.Goarch + " - " + versionInfo.Date)
 			fmt.Println()
+		} else {
+			fmt.Println(versionInfo.Version)
 		}
+
 	},
 }
 
 func init() {
-	Cmd.Flags().BoolP("short", "s", false, "show short version message")
-	viper.BindPFlag("short", Cmd.Flags().Lookup("short"))
+
 }

@@ -1,0 +1,54 @@
+version: 2
+project_name: y-cct
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod download
+    # you may remove this if you don't need go generate
+    - go generate ./...
+builds:
+  - env:
+      - CGO_ENABLED=1
+    main: ./cmd
+    # goos:
+    #   - linux
+    #   - windows
+    #   - darwin
+    # goarch:
+    #   - amd64
+    #   - arm
+    #   - arm64
+    # goarm:
+    #   - "5"
+    # ignore:
+    #   - goos: darwin
+    #     goarch: "386"
+    #   - goos: windows
+    #     goarch: arm
+    targets:
+      - linux_amd64
+    #  - linux_arm_5 #RaspberryPI
+    #  - linux_arm64
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.Date={{.Date}} -X main.Commit={{ .ShortCommit }} -X main.Version={{.Version}} -X main.Goos={{.Os}} -X main.Goarch={{.Arch}} -X main.BaseName={{ .ProjectName }}
+archives:
+  - name_template: >-
+      {{- .ProjectName }}_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end -}}
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  version_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
