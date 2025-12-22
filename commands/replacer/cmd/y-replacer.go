@@ -19,7 +19,7 @@ var (
 	Commit        = "unknown"
 	Date          = "0000-00-00 00:00:00"
 	BaseName      = "y-replacer"
-	MarketingSlug = "y-replacer - part of y-cct
+	MarketingSlug = "y-replacer - part of y-cct"
 	Description   = ""
 )
 
