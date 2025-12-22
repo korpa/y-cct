@@ -1,0 +1,20 @@
+# [[cmds]]
+# label = "Backend"
+# cmd = "make serve"
+
+# [[cmds]]
+# label = "Frontend"
+# cmd = "cd frontend ; npm run dev"
+
+[[cmds]]
+label = "Backend2"
+cmd = "sleep 3 ; echo 'hello from backend via stdout'; sleep 4"
+
+
+[[cmds]]
+label = "Frontend"
+cmd = "sleep 2 ; echo 'hello from frontend via stdout' ; sleep 1"
+
+[[cmds]]
+label = "Frontend2"
+cmd = "sleep 1 ; echo 'hello from frontend2 via stderr' 1>&2 ; sleep 2"
