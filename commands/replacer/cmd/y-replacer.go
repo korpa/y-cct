@@ -13,22 +13,39 @@ import (
 )
 
 var (
-	Version  = "0.0.0_dev"
-	Os       = "os_unknown"
-	Arch     = "arch_unknown"
-	Commit   = "commit_unknown"
-	BaseName = "replacer"
-	Date     = "date_unknown"
+	Version       = "v0.0.0-dev"
+	Goos          = "unknown"
+	Goarch        = "unknown"
+	Commit        = "unknown"
+	Date          = "0000-00-00 00:00:00"
+	BaseName      = "y-replacer"
+	MarketingSlug = "y-replacer - part of y-cct
+	Description   = ""
 )
 
 func main() {
+
+	versionInfo := version.VersionInfo{
+		Version:       Version,
+		Goos:          Goos,
+		Goarch:        Goarch,
+		Commit:        Commit,
+		Date:          Date,
+		BaseName:      BaseName,
+		MarketingSlug: MarketingSlug,
+		Description:   Description,
+	}
+
+	ctx := context.Background()
+	ctx = context.WithValue(ctx, "versionInfo", versionInfo)
+
 	logger := logging.GetLogger()
 	slog.SetDefault(logger)
 
 	if err := fang.Execute(
 		context.Background(),
 		replacer.Cmd,
-		fang.WithNotifySignal(os.Interrupt, os.Kill),
+		//fang.WithNotifySignal(os.Interrupt, os.Kill),
 	); err != nil {
 		slog.Error(fmt.Sprint(err))
 		os.Exit(1)

@@ -13,15 +13,31 @@ import (
 )
 
 var (
-	Version  = "0.0.0_dev"
-	Os       = "os_unknown"
-	Arch     = "arch_unknown"
-	Commit   = "commit_unknown"
-	BaseName = "retention"
-	Date     = "date_unknown"
+	Version       = "v0.0.0-dev"
+	Goos          = "unknown"
+	Goarch        = "unknown"
+	Commit        = "unknown"
+	Date          = "0000-00-00 00:00:00"
+	BaseName      = "y-retention"
+	MarketingSlug = "y-retention - part of y-cct"
+	Description   = ""
 )
 
 func main() {
+
+	versionInfo := version.VersionInfo{
+		Version:       Version,
+		Goos:          Goos,
+		Goarch:        Goarch,
+		Commit:        Commit,
+		Date:          Date,
+		BaseName:      BaseName,
+		MarketingSlug: MarketingSlug,
+		Description:   Description,
+	}
+
+	ctx := context.Background()
+	ctx = context.WithValue(ctx, "versionInfo", versionInfo)
 
 	logger := logging.GetLogger()
 	slog.SetDefault(logger)
