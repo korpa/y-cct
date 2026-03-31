@@ -43,7 +43,7 @@ func main() {
 	slog.SetDefault(logger)
 
 	if err := fang.Execute(
-		context.Background(),
+		ctx,
 		replacer.Cmd,
 		//fang.WithNotifySignal(os.Interrupt, os.Kill),
 	); err != nil {
