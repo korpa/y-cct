@@ -8,8 +8,7 @@
 
 [[cmds]]
 label = "Backend2"
-cmd = "sleep 3 ; echo 'hello from backend via stdout'; sleep 60"
-
+cmd = "sleep 3 ; echo 'hello from backend via stdout'; sleep 10"
 
 [[cmds]]
 label = "Frontend"

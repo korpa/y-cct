@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"regexp"
 	"sync"
 	"time"
 
@@ -69,6 +70,23 @@ func init() {
 	colors = append(colors, "#00BBBB")
 	colors = append(colors, "#BBBB00")
 	colors = append(colors, "#00BB00")
+}
+
+// Filter non-color ANSI escape sequences from subprocess output.
+// Keeps SGR sequences (\x1b[...m) for colors, strips everything else
+// (cursor queries, movement, screen clearing, OSC, etc.) to prevent
+// terminal responses (like CPR \x1b[row;colR) from leaking to the console.
+var (
+	reNonSGRCSI = regexp.MustCompile(`\x1b\[[\x30-\x3f]*[\x20-\x2f]*[\x40-\x6c\x6e-\x7e]`)
+	reOSC       = regexp.MustCompile(`\x1b\][^\x07\x1b]*(?:\x07|\x1b\\)`)
+	reEscOther  = regexp.MustCompile(`\x1b[^[\]]`)
+)
+
+func filterOutput(s string) string {
+	s = reNonSGRCSI.ReplaceAllString(s, "")
+	s = reOSC.ReplaceAllString(s, "")
+	s = reEscOther.ReplaceAllString(s, "")
+	return s
 }
 
 var processes []*process
@@ -222,9 +240,8 @@ func runCmd(wg *sync.WaitGroup, i int64, name string, command string) *process {
 		// }()
 		go func() {
 			scanner := bufio.NewScanner(ptmx)
-			// scanner.Split(bufio.ScanWords)
 			for scanner.Scan() {
-				m := scanner.Text()
+				m := filterOutput(scanner.Text())
 				fmt.Println(style.Render("["+name+"]") + " " + m)
 			}
 		}()
