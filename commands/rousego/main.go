@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"log/slog"
 	"os"
 	"os/exec"
@@ -15,6 +14,7 @@ import (
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
+	"github.com/creack/pty"
 	"github.com/korpa/y-cct/global/signalhandler"
 	"github.com/pelletier/go-toml/v2"
 	"github.com/spf13/cobra"
@@ -184,26 +184,44 @@ func runCmd(wg *sync.WaitGroup, i int64, name string, command string) *process {
 		cmd := exec.Command("sh", args...)
 		run.Cmd = cmd
 		// cmd.Dir = ""
-		stderr, _ := cmd.StderrPipe()
-		stdout, _ := cmd.StdoutPipe()
+		// stderr, _ := cmd.StderrPipe()
+		// stdout, _ := cmd.StdoutPipe()
 
-		err := cmd.Start()
-		if err != nil {
-			// Run could also return this error and push the program
-			// termination decision to the `main` method.
-			log.Fatal(err)
+		winSize := &pty.Winsize{Rows: 24, Cols: 80}
+		if ws, wsErr := pty.GetsizeFull(os.Stdout); wsErr == nil {
+			winSize = ws
 		}
 
+		ptmx, err := pty.StartWithSize(cmd, winSize)
+
+		if err != nil {
+			slog.Error(fmt.Sprint(err))
+			os.Exit(1)
+		}
+
+		defer func() { _ = ptmx.Close() }()
+
+		// go func() {
+		// 	_, _ = io.Copy(&stdout, ptmx)
+		// }()
+
+		// err := cmd.Start()
+		// if err != nil {
+		// 	// Run could also return this error and push the program
+		// 	// termination decision to the `main` method.
+		// 	log.Fatal(err)
+		// }
+
+		// go func() {
+		// 	scanner := bufio.NewScanner(stderr)
+		// 	// scanner.Split(bufio.ScanWords)
+		// 	for scanner.Scan() {
+		// 		m := scanner.Text()
+		// 		fmt.Println(style.Render("["+name+"]") + " " + m)
+		// 	}
+		// }()
 		go func() {
-			scanner := bufio.NewScanner(stderr)
-			// scanner.Split(bufio.ScanWords)
-			for scanner.Scan() {
-				m := scanner.Text()
-				fmt.Println(style.Render("["+name+"]") + " " + m)
-			}
-		}()
-		go func() {
-			scanner := bufio.NewScanner(stdout)
+			scanner := bufio.NewScanner(ptmx)
 			// scanner.Split(bufio.ScanWords)
 			for scanner.Scan() {
 				m := scanner.Text()

@@ -8,12 +8,12 @@
 
 [[cmds]]
 label = "Backend2"
-cmd = "sleep 3 ; echo 'hello from backend via stdout'; sleep 4"
+cmd = "sleep 3 ; echo 'hello from backend via stdout'; sleep 60"
 
 
 [[cmds]]
 label = "Frontend"
-cmd = "sleep 2 ; echo 'hello from frontend via stdout' ; sleep 1"
+cmd = "sleep 2 ; gum style --bold --foreground=29 'Hello from frontend to stdout' ; sleep 1"
 
 [[cmds]]
 label = "Frontend2"
